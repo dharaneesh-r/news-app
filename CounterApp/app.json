@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Informative Journal",
-    "slug": "Informative Journal",
+    "name": "Counter Application",
+    "slug": "Counter Application",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,7 +12,6 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "jsEngine": "jsc",
       "supportsTablet": true
     },
     "android": {
@@ -23,7 +22,6 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "jsEngine": "hermes"
+    }
   }
 }
