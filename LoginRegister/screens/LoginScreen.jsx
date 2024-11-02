@@ -1,21 +1,34 @@
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import React, { useEffect, useState } from "react";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import Auth from "../services/FirebaseAuth";
 
-const RegisterScreen = ({ navigation }) => {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleRegister = () => {
+  const checkIfLoggedIn = () => {
+    onAuthStateChanged(Auth, (user) => {
+        if(user) {
+            navigation.navigate("Dashboard")
+        }else{
+            console.log("LOGGED OUT")
+        }
+    })
+  }
+
+  useEffect(() => {
+    checkIfLoggedIn()
+  },[])
+
+  const handleLogin = () => {
     setError("");
     console.log("Email - ", email, "Password - ", password);
-    createUserWithEmailAndPassword(Auth, email, password)
+    signInWithEmailAndPassword(Auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
-        console.log(user);
-        navigation.navigate("Login");
+        navigation.navigate("Dashboard");
       })
       .catch((error) => {
         console.log(error);
@@ -23,13 +36,13 @@ const RegisterScreen = ({ navigation }) => {
       });
   };
 
-  const navigateLogin = () => {
-    navigation.navigate("Login");
+  const navigateRegister = () => {
+    navigation.navigate("Register");
   };
 
   return (
     <View style={styles.container}>
-      <Text style={{ textAlign: "center" }}>NEW REGISTER</Text>
+      <Text style={{ textAlign: "center", fontSize: 30 }}>LOGIN</Text>
       <View style={styles.boxContainer}>
         <TextInput
           placeholder="email"
@@ -46,15 +59,15 @@ const RegisterScreen = ({ navigation }) => {
         />
         {error && <Text style={{ color: "red", marginTop: 2 }}>{error}</Text>}
       </View>
-      <Button title="Register" variant="danger" onPress={handleRegister} />
-      <Text style={{ marginTop: 3 }} onPress={navigateLogin}>
-        Already have an account ? Login Here
+      <Button title="Login" variant="danger" onPress={handleLogin} />
+      <Text style={{ marginTop: 3 }} onPress={navigateRegister}>
+        If don't have an account ? Register Here
       </Text>
     </View>
   );
 };
 
-export default RegisterScreen;
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   textInputContainer: {
@@ -66,7 +79,6 @@ const styles = StyleSheet.create({
   boxContainer: {
     margin: 10,
   },
-
   container: {
     flex: 1,
     backgroundColor: "#fff",
